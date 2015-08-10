@@ -7,9 +7,17 @@ var bodyParser = require('body-parser');
 var validator = require('validator');
 var config = require('./config');
 var app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 var readFile = Promise.promisify(fs.readFile);
+
+function allowCrossDomain(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'POST');
+
+  next();
+}
+app.use(allowCrossDomain);
 
 /*
   email: {
@@ -75,12 +83,14 @@ function adaptFormDataToRsvp(formData) {
 }
 
 app.post('/rsvp', function(req, res) {
+  console.log('received rsvp');
   adaptFormDataToRsvp(req.body)
     .then(adaptRsvpObjectToEmail)
     .then(sendEmail)
     .then(function() {
-      res.sendStatus(200);
+      res.status(200);
     }).catch(function(error) {
+      console.log(error);
       res.status(500).json(error);
     });
 });
