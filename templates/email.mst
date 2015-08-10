@@ -1,0 +1,15 @@
+<html>
+<body>
+<p>Hi,</p>
+
+<p>Received a <b>{{ #coming }}YES{{ /coming }}{{ ^coming }}NO{{ /coming }}</b> from {{ name }}.</p>
+
+<p>They also said the following:</p>
+
+<p><blockquote>{{ message }}</blockquote></p>
+
+<p>Thanks,</p>
+
+<p>Your Friendly Wedding Website</p>
+</body>
+</html>

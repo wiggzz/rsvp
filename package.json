@@ -1,0 +1,25 @@
+{
+  "name": "rsvp",
+  "version": "1.0.0",
+  "description": "Collects wedding RSVPs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app/index.js"
+  },
+  "author": "Will James",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^2.9.34",
+    "body-parser": "^1.13.3",
+    "express": "^4.13.3",
+    "mustache": "^2.1.3",
+    "request": "^2.60.0",
+    "validator": "^4.0.2"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5",
+    "nock": "^2.10.0"
+  },
+  "repository": "https://github.com/wiggzz/rsvp"
+}
