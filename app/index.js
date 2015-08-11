@@ -13,7 +13,9 @@ var readFile = Promise.promisify(fs.readFile);
 
 function allowCrossDomain(req, res, next) {
   if (config.accessControllAllowOrigin) {
-    res.header('Access-Control-Allow-Origin', config.accessControllAllowOrigin);
+    config.accessControllAllowOrigins.split(',').forEach(function(origin) {
+      res.header('Access-Control-Allow-Origin', config.accessControllAllowOrigin);
+    });
   }
   if (config.accessControllAllowMethods) {
     res.header('Access-Control-Allow-Methods', config.accessControllAllowMethods);
