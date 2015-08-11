@@ -12,10 +12,19 @@ app.use(bodyParser.urlencoded({extended: false}));
 var readFile = Promise.promisify(fs.readFile);
 
 function allowCrossDomain(req, res, next) {
-  if (config.accessControllAllowOrigin) {
-    config.accessControllAllowOrigins.split(',').forEach(function(origin) {
-      res.header('Access-Control-Allow-Origin', config.accessControllAllowOrigin);
-    });
+  if (config.accessControllAllowOrigins) {
+    var origin = config.accessControllAllowOrigins.split(',').reduce(function(acc, origin) {
+      if (origin == "*" || acc == "*") {
+        return "*"
+      } else if (origin == req.get('Referer')) {
+        return origin
+      } else {
+        return acc
+      }
+    },null);
+    if (origin) {
+      res.header('Access-Control-Allow-Origin', origin);
+    }
   }
   if (config.accessControllAllowMethods) {
     res.header('Access-Control-Allow-Methods', config.accessControllAllowMethods);
