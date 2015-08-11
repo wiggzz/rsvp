@@ -12,8 +12,12 @@ app.use(bodyParser.urlencoded({extended: false}));
 var readFile = Promise.promisify(fs.readFile);
 
 function allowCrossDomain(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'POST');
+  if (config.accessControllAllowOrigin) {
+    res.header('Access-Control-Allow-Origin', config.accessControllAllowOrigin);
+  }
+  if (config.accessControllAllowMethods) {
+    res.header('Access-Control-Allow-Methods', config.accessControllAllowMethods);
+  }
 
   next();
 }
@@ -61,8 +65,8 @@ function sendEmail(email) {
 function adaptRsvpObjectToEmail(rsvp) {
   return readFile('templates/email.mst',{encoding:'utf8'}).then(function(template) {
     var email = {
-      from: 'Wedding RSVP <rsvp@mg.willplusmichelle.com>',
-      to: 'jameswt@gmail.com',
+      from: 'Wedding RSVP <rsvp@example.com>',
+      to: config.sendToEmail,
       subject: 'Wedding RSVP from ' + rsvp.name,
       html: Mustache.render(template, rsvp)
     };
