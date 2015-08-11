@@ -11,18 +11,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 var readFile = Promise.promisify(fs.readFile);
 
-function allowCrossDomain(req, res, next) {
-  if (config.accessControllAllowOrigin) {
-    res.header('Access-Control-Allow-Origin', config.accessControllAllowOrigin);
-  }
-  if (config.accessControllAllowMethods) {
-    res.header('Access-Control-Allow-Methods', config.accessControllAllowMethods);
-  }
-
-  next();
-}
-app.use(allowCrossDomain);
-
 /*
   email: {
     from: 'Example <example@example.com>',
@@ -77,7 +65,6 @@ function adaptFormDataToRsvp(formData) {
     throw new Error('Invalid RSVP parameter: Name');
   }
 
-  formData.email = formData.email || null
   if (formData.email) {
     if (!validator.isEmail(formData.email)) {
       throw new Error('Invalid RSVP parameter: Email');
@@ -85,8 +72,6 @@ function adaptFormDataToRsvp(formData) {
       formData.email = validator.normalizeEmail(formData.email);
     }
   }
-
-  formData.message = formData.message || null;
 
   if (!formData.coming || !validator.isBoolean(formData.coming)) {
     throw new Error('Invalid RSVP parameter: coming');
