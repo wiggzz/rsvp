@@ -16,7 +16,7 @@ function allowCrossDomain(req, res, next) {
     var origin = config.accessControllAllowOrigins.split(',').reduce(function(acc, origin) {
       if (origin == "*" || acc == "*") {
         return "*"
-      } else if (origin == req.get('Referer')) {
+      } else if (origin == req.get('Origin')) {
         return origin
       } else {
         return acc
