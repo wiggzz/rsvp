@@ -1,8 +1,8 @@
 module.exports = {
   mailgunApiUrl: 'https://api.mailgun.net/v3',
-  mailgunAccount: 'mg.example.com',
+  mailgunAccount: 'mg.willplusmichelle.com',
   mailgunApiKey: process.env.MAILGUN_API_KEY,
-  sendToEmail: 'example@example.com',
-  accessControllAllowOrigin: null,
-  accessControllAllowMethods: null
+  sendToEmail: 'jameswt@gmail.com',
+  accessControllAllowOrigin: 'willplusmichelle.com',
+  accessControllAllowMethods: 'POST'
 };

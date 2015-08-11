@@ -2,7 +2,7 @@
 <body>
 <p>Hi,</p>
 
-<p>Received a <b>{{ #coming }}YES{{ /coming }}{{ ^coming }}NO{{ /coming }}</b> from {{ name }}.</p>
+<p>Received a <b>{{ #coming }}YES{{ /coming }}{{ ^coming }}NO{{ /coming }}</b> from {{ name }} &lt;<a href="mailto: {{ email }}">{{ email }}</a>&gt;.</p>
 
 <p>They also said the following:</p>
 

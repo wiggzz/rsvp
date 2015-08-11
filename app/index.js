@@ -65,7 +65,7 @@ function sendEmail(email) {
 function adaptRsvpObjectToEmail(rsvp) {
   return readFile('templates/email.mst',{encoding:'utf8'}).then(function(template) {
     var email = {
-      from: 'Wedding RSVP <rsvp@example.com>',
+      from: 'Wedding RSVP <rsvp@mg.willplusmichelle.com>',
       to: config.sendToEmail,
       subject: 'Wedding RSVP from ' + rsvp.name,
       html: Mustache.render(template, rsvp)
@@ -79,7 +79,8 @@ function adaptFormDataToRsvp(formData) {
     return Promise.resolve({
       name: formData.name,
       message: formData.message,
-      coming: !!formData.coming
+      coming: !!formData.coming,
+      email: formData.email
     });
   } catch (error) {
     return Promise.reject(error);
