@@ -47,10 +47,7 @@ function sendEmail(email) {
 
   return request(options).spread(function (response, body) {
     if (response.statusCode != 200) {
-      throw {
-        message: 'Invalid response from mailgun',
-        response: response
-      };
+      throw new Error('Invalid response from mailgun');
     }
   });
 }
@@ -58,6 +55,7 @@ function sendEmail(email) {
 /*
   rsvp: {
     name: 'Billy Bob Thornton',
+    email: 'bbob@billybob.com',
     message: 'Yes, Im coming!!!',
     coming: false
   }
@@ -75,28 +73,48 @@ function adaptRsvpObjectToEmail(rsvp) {
 }
 
 function adaptFormDataToRsvp(formData) {
-  try {
-    return Promise.resolve({
-      name: formData.name,
-      message: formData.message,
-      coming: !!formData.coming,
-      email: formData.email
-    });
-  } catch (error) {
-    return Promise.reject(error);
+  if (!formData.name) {
+    throw new Error('Invalid RSVP parameter: Name');
   }
+
+  formData.email = formData.email || null
+  if (formData.email) {
+    if (!validator.isEmail(formData.email)) {
+      throw new Error('Invalid RSVP parameter: Email');
+    } else {
+      formData.email = validator.normalizeEmail(formData.email);
+    }
+  }
+
+  formData.message = formData.message || null;
+
+  if (!formData.coming || !validator.isBoolean(formData.coming)) {
+    throw new Error('Invalid RSVP parameter: coming');
+  }
+
+  return {
+    name: formData.name,
+    email: validator.normalizeEmail(formData.email),
+    message: formData.message,
+    coming: validator.toBoolean(formData.coming)
+  };
 }
 
 app.post('/rsvp', function(req, res) {
-  console.log('received rsvp');
-  adaptFormDataToRsvp(req.body)
-    .then(adaptRsvpObjectToEmail)
+  try {
+    rsvp = adaptFormDataToRsvp(req.body);
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json({error: error.message});
+    return
+  }
+  adaptRsvpObjectToEmail(rsvp)
     .then(sendEmail)
     .then(function() {
-      res.status(200);
+      res.sendStatus(200);
     }).catch(function(error) {
-      console.log(error);
-      res.status(500).json(error);
+      console.log(error.message);
+      res.sendStatus(500);
     });
 });
 

@@ -4,9 +4,11 @@
 
 <p>Received a <b>{{ #coming }}YES{{ /coming }}{{ ^coming }}NO{{ /coming }}</b> from {{ name }} &lt;<a href="mailto: {{ email }}">{{ email }}</a>&gt;.</p>
 
+{{ #message }}
 <p>They also said the following:</p>
 
 <p><blockquote>{{ message }}</blockquote></p>
+{{ /message }}
 
 <p>Thanks,</p>
 
