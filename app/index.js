@@ -5,6 +5,7 @@ var express = require('express');
 var Mustache = require('mustache');
 var bodyParser = require('body-parser');
 var validator = require('validator');
+var Spreadsheet = require('edit-google-spreadsheet');
 var config = require('./config');
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -63,6 +64,44 @@ function sendEmail(email) {
   });
 }
 
+function writeRSVPToGoogleSheets(rsvp) {
+  return new Promise(function(resolve, reject) {
+    Spreadsheet.load({
+      spreadsheetId: config.googleSheetsSpreadsheetId,
+      worksheetId: config.googleSheetsWorksheetId,
+      oauth: {
+        email: config.googleSheetsUser,
+        key: config.googleSheetsKey
+      }
+    }, function (err, spreadsheet) {
+      if (err) {
+        reject(err);
+      }
+
+      spreadsheet.receive(function(err, rows, info) {
+        var appendRow = info.lastRow+1
+        var obj = {}
+        obj[appendRow] = {
+          1: rsvp.name,
+          2: rsvp.email,
+          3: rsvp.coming ? 'Yes' : 'No',
+          4: rsvp.message
+        }
+        spreadsheet.add(obj);
+
+        spreadsheet.send({
+          autoSize: true
+        },function (err) {
+          if (err) {
+            reject(err);
+          }
+          resolve();
+        });
+      });
+    });
+  });
+}
+
 /*
   rsvp: {
     name: 'Billy Bob Thornton',
@@ -74,7 +113,7 @@ function sendEmail(email) {
 function adaptRsvpObjectToEmail(rsvp) {
   return readFile('templates/email.mst',{encoding:'utf8'}).then(function(template) {
     var email = {
-      from: 'Wedding RSVP <rsvp@mg.willplusmichelle.com>',
+      from: config.sendFromEmail,
       to: config.sendToEmail,
       subject: 'Wedding RSVP from ' + rsvp.name,
       html: Mustache.render(template, rsvp)
@@ -116,8 +155,9 @@ app.post('/rsvp', function(req, res) {
     res.status(400).json({error: error.message});
     return
   }
-  adaptRsvpObjectToEmail(rsvp)
-    .then(sendEmail)
+  Promise.join(
+    writeRSVPToGoogleSheets(rsvp),
+    adaptRsvpObjectToEmail(rsvp).then(sendEmail))
     .then(function() {
       res.sendStatus(200);
     }).catch(function(error) {
