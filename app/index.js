@@ -6,7 +6,7 @@ var Mustache = require('mustache');
 var bodyParser = require('body-parser');
 var validator = require('validator');
 var Spreadsheet = require('edit-google-spreadsheet');
-var config = require('./config');
+var config = require('./config').load();
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 
