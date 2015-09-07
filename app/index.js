@@ -143,7 +143,8 @@ function adaptFormDataToRsvp(formData) {
     name: formData.name,
     email: validator.normalizeEmail(formData.email),
     message: formData.message,
-    coming: validator.toBoolean(formData.coming)
+    coming: validator.toBoolean(formData.coming),
+    sheetsUrl: 'https://docs.google.com/spreadsheets/d/' + config.googleSheetsSpreadsheetId
   };
 }
 

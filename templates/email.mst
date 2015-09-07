@@ -10,6 +10,8 @@
 <p><blockquote>{{ message }}</blockquote></p>
 {{ /message }}
 
+<p><a href="{{ sheetsUrl }}">Please click here to see RSVPs to date.</a></p>
+
 <p>Thanks,</p>
 
 <p>Your Friendly Wedding Website</p>
