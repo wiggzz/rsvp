@@ -152,7 +152,7 @@ app.post('/rsvp', function(req, res) {
   try {
     rsvp = adaptFormDataToRsvp(req.body);
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     res.status(400).json({error: error.message});
     return
   }
@@ -162,7 +162,7 @@ app.post('/rsvp', function(req, res) {
     .then(function() {
       res.sendStatus(200);
     }).catch(function(error) {
-      console.log(error.message);
+      console.log(error);
       res.sendStatus(500);
     });
 });
